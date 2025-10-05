@@ -13,6 +13,12 @@
         .card {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease-in-out;
+            border: 2px solid rgba(147, 51, 234, 0.2);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            border-color: rgba(147, 51, 234, 0.4);
         }
         .card-content {
             transition: opacity 0.5s ease-in-out;
@@ -23,6 +29,26 @@
         .nav-button:hover {
             transform: scale(1.1);
         }
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Mejoras para dispositivos táctiles */
+        @media (hover: none) and (pointer: coarse) {
+            .nav-button:hover {
+                transform: none;
+            }
+            .nav-button:active {
+                transform: scale(0.95);
+                background-color: rgba(147, 51, 234, 0.8);
+            }
+            #costume-image:hover {
+                transform: none;
+            }
+            .card:hover {
+                transform: none;
+            }
+        }
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
@@ -30,31 +56,53 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        #costume-image {
+            filter: brightness(0.95) contrast(1.1) saturate(1.1);
+            object-fit: cover;
+            object-position: center top;
+        }
+        #costume-image:hover {
+            filter: brightness(1.05) contrast(1.15) saturate(1.2);
+        }
+        
+        /* Ajustes específicos para diferentes tipos de imágenes */
+        .costume-portrait {
+            object-position: center top;
+        }
+        .costume-full-body {
+            object-position: center center;
+        }
+        .costume-close-up {
+            object-position: center center;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-sm mx-auto">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-6 text-purple-400">Galería de Disfraces</h1>
+    <div class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-2 sm:px-4">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4 sm:mb-6 text-purple-400">Galería de Disfraces</h1>
 
         <!-- Tarjeta del Disfraz -->
         <div id="costume-card" class="card bg-gray-800 rounded-2xl overflow-hidden relative">
             <!-- Imagen -->
-            <img id="costume-image" src="" alt="Imagen de Disfraz" class="w-full h-96 object-cover object-center" onerror="this.onerror=null;this.src='https://placehold.co/600x400/2d3748/e2e8f0?text=Imagen+no+disponible';">
+            <img id="costume-image" src="" alt="Imagen de Disfraz" class="w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] object-cover object-center transition-all duration-300 hover:scale-105" style="object-position: center top;" onerror="this.onerror=null;this.src='https://placehold.co/600x400/2d3748/e2e8f0?text=Imagen+no+disponible';">
 
             <!-- Contenido -->
-            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black to-transparent">
-                <h2 id="costume-title" class="text-2xl font-bold text-shadow"></h2>
+            <div class="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 bg-gradient-to-t from-black to-transparent">
+                <h2 id="costume-title" class="text-lg sm:text-xl md:text-2xl font-bold text-shadow"></h2>
             </div>
         </div>
 
         <!-- Navegación -->
-        <div class="flex justify-between items-center mt-6">
-            <button id="prev-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <div class="flex justify-between items-center mt-4 sm:mt-6 gap-2 sm:gap-4">
+            <button id="prev-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 sm:py-3 sm:px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base">
                 Anterior
             </button>
-            <div id="costume-counter" class="text-lg font-semibold text-gray-400">1 / 35</div>
-            <button id="next-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <div id="costume-counter" class="text-sm sm:text-lg font-semibold text-gray-400">1 / 35</div>
+            <button id="next-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 sm:py-3 sm:px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base">
                 Siguiente
             </button>
         </div>
@@ -62,41 +110,41 @@
 
     <script>
         const costumes = [
-            { title: "Elfa o Hada del Bosque", image: "images/img1.jpg" },
-            { title: "Hechicera / Bruja Moderna", image: "images/img3.jpg" },
-            { title: "Steampunk", image: "images/img4.jpg" },
-            { title: "Batichica", image: "images/img5.jpg" },
-            { title: "Juego de Tronos", image: "images/img6.jpg" },
-            { title: "The Witcher (Yennefer)", image: "images/img7.jpg" },
-            { title: "Star Wars (Rey)", image: "images/img8.jpg" },
-            { title: "Locos Addams (Morticia)", image: "images/img9.jpg" },
-            { title: "Harry Potter", image: "images/img10.jpg" },
-            { title: "Capitana Marvel", image: "images/img11.jpg" },
-            { title: "Raven (Jóvenes Titanes)", image: "images/img12.jpg" },
-            { title: "Zatanna (DC)", image: "images/img13.jpg" },
-            { title: "Hiedra Venenosa (DC)", image: "images/img14.jpg" },
-            { title: "Alicia en el País de las Maravillas", image: "images/img15.jpg" },
-            { title: "Sombrerero Loco", image: "images/img16.jpg" },
-            { title: "Reina Blanca", image: "images/img17.jpg" },
-            { title: "Frozen (Elsa)", image: "images/img18.jpg" },
-            { title: "Señor de los Anillos (Galadriel)", image: "images/img19.jpg" },
-            { title: "Bella y la Bestia", image: "images/img20.jpg" },
-            { title: "Chicas Superpoderosas", image: "images/img21.jpg" },
-            { title: "Los Increíbles (Elastigirl)", image: "images/img22.jpg" },
-            { title: "Scooby Doo (Daphne)", image: "images/img23.jpg" },
-            { title: "Peaky Blinders", image: "images/img24.jpg" },
-            { title: "Team Rocket (Pokémon)", image: "images/img25.jpg" },
-            { title: "Toy Story (Jessie)", image: "images/img26.jpg" },
-            { title: "Luffy (One Piece)", image: "images/img27.jpg" },
-            { title: "Kim Possible", image: "images/img28.jpg" },
-            { title: "Mario Bros", image: "images/img29.jpg" },
-            { title: "Lara Croft", image: "images/img30.jpg" },
-            { title: "Violet (Fábrica de Chocolate)", image: "images/img31.jpg" },
-            { title: "Maga / Ilusionista", image: "images/img32.jpg" },
-            { title: "Diosa Romana", image: "images/img33.jpg" },
-            { title: "Cisne Negro", image: "images/img34.jpg" },
-            { title: "Matrix (Trinity)", image: "images/img35.jpg" },
-            { title: "La Casa de Papel", image: "images/img2.jpg" },
+            { title: "Elfa o Hada del Bosque", image: "images/img1.jpg", type: "portrait" },
+            { title: "Hechicera / Bruja Moderna", image: "images/img3.png", type: "portrait" },
+            { title: "Steampunk", image: "images/img4.png", type: "full-body" },
+            { title: "Batichica", image: "images/img5.png", type: "portrait" },
+            { title: "Juego de Tronos", image: "images/img6.png", type: "full-body" },
+            { title: "The Witcher (Yennefer)", image: "images/img7.png", type: "portrait" },
+            { title: "Star Wars (Rey)", image: "images/img8.png", type: "full-body" },
+            { title: "Locos Addams (Morticia)", image: "images/img9.png", type: "portrait" },
+            { title: "Harry Potter", image: "images/img10.png", type: "portrait" },
+            { title: "Capitana Marvel", image: "images/img11.png", type: "portrait" },
+            { title: "Raven (Jóvenes Titanes)", image: "images/img12.png", type: "portrait" },
+            { title: "Zatanna (DC)", image: "images/img13.png", type: "portrait" },
+            { title: "Hiedra Venenosa (DC)", image: "images/img14.png", type: "portrait" },
+            { title: "Alicia en el País de las Maravillas", image: "images/img15.png", type: "full-body" },
+            { title: "Sombrerero Loco", image: "images/img16.png", type: "portrait" },
+            { title: "Reina Blanca", image: "images/img17.png", type: "portrait" },
+            { title: "Frozen (Elsa)", image: "images/img18.png", type: "full-body" },
+            { title: "Señor de los Anillos (Galadriel)", image: "images/img19.png", type: "portrait" },
+            { title: "Bella y la Bestia", image: "images/img20.png", type: "full-body" },
+            { title: "Chicas Superpoderosas", image: "images/img21.png", type: "portrait" },
+            { title: "Los Increíbles (Elastigirl)", image: "images/img22.png", type: "portrait" },
+            { title: "Scooby Doo (Daphne)", image: "images/img23.png", type: "portrait" },
+            { title: "Peaky Blinders", image: "images/img24.png", type: "portrait" },
+            { title: "Team Rocket (Pokémon)", image: "images/img25.png", type: "portrait" },
+            { title: "Toy Story (Jessie)", image: "images/img26.png", type: "portrait" },
+            { title: "Luffy (One Piece)", image: "images/img27.png", type: "portrait" },
+            { title: "Kim Possible", image: "images/img28.png", type: "portrait" },
+            { title: "Mario Bros", image: "images/img29.png", type: "portrait" },
+            { title: "Lara Croft", image: "images/img30.jpg", type: "portrait" },
+            { title: "Violet (Fábrica de Chocolate)", image: "images/img31.png", type: "portrait" },
+            { title: "Maga / Ilusionista", image: "images/img32.png", type: "portrait" },
+            { title: "Diosa Romana", image: "images/img33.png", type: "portrait" },
+            { title: "Cisne Negro", image: "images/img34.png", type: "portrait" },
+            { title: "Matrix (Trinity)", image: "images/img35.jpg", type: "portrait" },
+            { title: "La Casa de Papel", image: "images/img2.png", type: "portrait" },
         ];
 
         let currentIndex = 0;
@@ -113,6 +161,21 @@
             costumeImage.src = costume.image;
             costumeTitle.textContent = costume.title;
             costumeCounter.textContent = `${index + 1} / ${costumes.length}`;
+            
+            // Aplicar ajustes específicos según el tipo de imagen
+            costumeImage.className = 'w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] object-cover object-center transition-all duration-300 hover:scale-105';
+            
+            if (costume.type === 'portrait') {
+                costumeImage.style.objectPosition = 'center top';
+                costumeImage.style.filter = 'brightness(0.95) contrast(1.1) saturate(1.1)';
+            } else if (costume.type === 'full-body') {
+                costumeImage.style.objectPosition = 'center center';
+                costumeImage.style.filter = 'brightness(0.9) contrast(1.15) saturate(1.05)';
+            } else {
+                costumeImage.style.objectPosition = 'center center';
+                costumeImage.style.filter = 'brightness(0.95) contrast(1.1) saturate(1.1)';
+            }
+            
             costumeCard.classList.remove('fade-in');
             // Trigger reflow to restart animation
             void costumeCard.offsetWidth;
