@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideas de Disfraces</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card-content {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .nav-button {
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .nav-button:hover {
+            transform: scale(1.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-sm mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-6 text-purple-400">Galería de Disfraces</h1>
+
+        <!-- Tarjeta del Disfraz -->
+        <div id="costume-card" class="card bg-gray-800 rounded-2xl overflow-hidden relative">
+            <!-- Imagen -->
+            <img id="costume-image" src="" alt="Imagen de Disfraz" class="w-full h-96 object-cover object-center" onerror="this.onerror=null;this.src='https://placehold.co/600x400/2d3748/e2e8f0?text=Imagen+no+disponible';">
+
+            <!-- Contenido -->
+            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black to-transparent">
+                <h2 id="costume-title" class="text-2xl font-bold text-shadow"></h2>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="flex justify-between items-center mt-6">
+            <button id="prev-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500">
+                Anterior
+            </button>
+            <div id="costume-counter" class="text-lg font-semibold text-gray-400">1 / 35</div>
+            <button id="next-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500">
+                Siguiente
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const costumes = [
+            { title: "Elfa o Hada del Bosque", image: "images/img1.jpg" },
+            { title: "Hechicera / Bruja Moderna", image: "images/img3.jpg" },
+            { title: "Steampunk", image: "images/img4.jpg" },
+            { title: "Batichica", image: "images/img5.jpg" },
+            { title: "Juego de Tronos", image: "images/img6.jpg" },
+            { title: "The Witcher (Yennefer)", image: "images/img7.jpg" },
+            { title: "Star Wars (Rey)", image: "images/img8.jpg" },
+            { title: "Locos Addams (Morticia)", image: "images/img9.jpg" },
+            { title: "Harry Potter", image: "images/img10.jpg" },
+            { title: "Capitana Marvel", image: "images/img11.jpg" },
+            { title: "Raven (Jóvenes Titanes)", image: "images/img12.jpg" },
+            { title: "Zatanna (DC)", image: "images/img13.jpg" },
+            { title: "Hiedra Venenosa (DC)", image: "images/img14.jpg" },
+            { title: "Alicia en el País de las Maravillas", image: "images/img15.jpg" },
+            { title: "Sombrerero Loco", image: "images/img16.jpg" },
+            { title: "Reina Blanca", image: "images/img17.jpg" },
+            { title: "Frozen (Elsa)", image: "images/img18.jpg" },
+            { title: "Señor de los Anillos (Galadriel)", image: "images/img19.jpg" },
+            { title: "Bella y la Bestia", image: "images/img20.jpg" },
+            { title: "Chicas Superpoderosas", image: "images/img21.jpg" },
+            { title: "Los Increíbles (Elastigirl)", image: "images/img22.jpg" },
+            { title: "Scooby Doo (Daphne)", image: "images/img23.jpg" },
+            { title: "Peaky Blinders", image: "images/img24.jpg" },
+            { title: "Team Rocket (Pokémon)", image: "images/img25.jpg" },
+            { title: "Toy Story (Jessie)", image: "images/img26.jpg" },
+            { title: "Luffy (One Piece)", image: "images/img27.jpg" },
+            { title: "Kim Possible", image: "images/img28.jpg" },
+            { title: "Mario Bros", image: "images/img29.jpg" },
+            { title: "Lara Croft", image: "images/img30.jpg" },
+            { title: "Violet (Fábrica de Chocolate)", image: "images/img31.jpg" },
+            { title: "Maga / Ilusionista", image: "images/img32.jpg" },
+            { title: "Diosa Romana", image: "images/img33.jpg" },
+            { title: "Cisne Negro", image: "images/img34.jpg" },
+            { title: "Matrix (Trinity)", image: "images/img35.jpg" },
+            { title: "La Casa de Papel", image: "images/img2.jpg" },
+        ];
+
+        let currentIndex = 0;
+
+        const costumeCard = document.getElementById('costume-card');
+        const costumeImage = document.getElementById('costume-image');
+        const costumeTitle = document.getElementById('costume-title');
+        const costumeCounter = document.getElementById('costume-counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function showCostume(index) {
+            const costume = costumes[index];
+            costumeImage.src = costume.image;
+            costumeTitle.textContent = costume.title;
+            costumeCounter.textContent = `${index + 1} / ${costumes.length}`;
+            costumeCard.classList.remove('fade-in');
+            // Trigger reflow to restart animation
+            void costumeCard.offsetWidth;
+            costumeCard.classList.add('fade-in');
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + costumes.length) % costumes.length;
+            showCostume(currentIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % costumes.length;
+            showCostume(currentIndex);
+        });
+
+        // Carga inicial
+        window.addEventListener('load', () => {
+            showCostume(currentIndex);
+        });
+    </script>
+</body>
+</html>
+
