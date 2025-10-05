@@ -94,6 +94,15 @@
         .costume-close-up {
             object-position: center center;
         }
+        
+        /* Posiciones personalizadas adicionales */
+        .position-center-top { object-position: center top; }
+        .position-center-center { object-position: center center; }
+        .position-center-bottom { object-position: center bottom; }
+        .position-left-center { object-position: left center; }
+        .position-right-center { object-position: right center; }
+        .position-left-top { object-position: left top; }
+        .position-right-top { object-position: right top; }
     </style>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
@@ -126,41 +135,41 @@
 
     <script>
         const costumes = [
-            { title: "Elfa o Hada del Bosque", image: "images/img1.jpg", type: "portrait" },
-            { title: "Hechicera / Bruja Moderna", image: "images/img3.png", type: "portrait" },
-            { title: "Steampunk", image: "images/img4.png", type: "full-body" },
-            { title: "Batichica", image: "images/img5.png", type: "portrait" },
-            { title: "Juego de Tronos", image: "images/img6.png", type: "full-body" },
-            { title: "The Witcher (Yennefer)", image: "images/img7.png", type: "portrait" },
-            { title: "Star Wars (Rey)", image: "images/img8.png", type: "full-body" },
-            { title: "Locos Addams (Morticia)", image: "images/img9.png", type: "portrait" },
-            { title: "Harry Potter", image: "images/img10.png", type: "portrait" },
-            { title: "Capitana Marvel", image: "images/img11.png", type: "portrait" },
-            { title: "Raven (Jóvenes Titanes)", image: "images/img12.png", type: "portrait" },
-            { title: "Zatanna (DC)", image: "images/img13.png", type: "portrait" },
-            { title: "Hiedra Venenosa (DC)", image: "images/img14.png", type: "portrait" },
-            { title: "Alicia en el País de las Maravillas", image: "images/img15.png", type: "full-body" },
-            { title: "Sombrerero Loco", image: "images/img16.png", type: "portrait" },
-            { title: "Reina Blanca", image: "images/img17.png", type: "portrait" },
-            { title: "Frozen (Elsa)", image: "images/img18.png", type: "full-body" },
-            { title: "Señor de los Anillos (Galadriel)", image: "images/img19.png", type: "portrait" },
-            { title: "Bella y la Bestia", image: "images/img20.png", type: "full-body" },
-            { title: "Chicas Superpoderosas", image: "images/img21.png", type: "portrait" },
-            { title: "Los Increíbles (Elastigirl)", image: "images/img22.png", type: "portrait" },
-            { title: "Scooby Doo (Daphne)", image: "images/img23.png", type: "portrait" },
-            { title: "Peaky Blinders", image: "images/img24.png", type: "portrait" },
-            { title: "Team Rocket (Pokémon)", image: "images/img25.png", type: "portrait" },
-            { title: "Toy Story (Jessie)", image: "images/img26.png", type: "portrait" },
-            { title: "Luffy (One Piece)", image: "images/img27.png", type: "portrait" },
-            { title: "Kim Possible", image: "images/img28.png", type: "portrait" },
-            { title: "Mario Bros", image: "images/img29.png", type: "portrait" },
-            { title: "Lara Croft", image: "images/img30.jpg", type: "portrait" },
-            { title: "Violet (Fábrica de Chocolate)", image: "images/img31.png", type: "portrait" },
-            { title: "Maga / Ilusionista", image: "images/img32.png", type: "portrait" },
-            { title: "Diosa Romana", image: "images/img33.png", type: "portrait" },
-            { title: "Cisne Negro", image: "images/img34.png", type: "portrait" },
-            { title: "Matrix (Trinity)", image: "images/img35.jpg", type: "portrait" },
-            { title: "La Casa de Papel", image: "images/img2.png", type: "portrait" },
+            { title: "Elfa o Hada del Bosque", image: "images/img1.jpg", type: "portrait", position: "center top" },
+            { title: "Hechicera / Bruja Moderna", image: "images/img2.png", type: "portrait", position: "center top" },
+            { title: "Steampunk", image: "images/img3.png", type: "full-body", position: "center center" },
+            { title: "Batichica", image: "images/img4.png", type: "portrait", position: "center top" },
+            { title: "Juego de Tronos", image: "images/img5.png", type: "full-body", position: "center center" },
+            { title: "The Witcher", image: "images/img6.png", type: "portrait", position: "center top" },
+            { title: "Star Wars", image: "images/img7.png", type: "full-body", position: "center center" },
+            { title: "Locos Addams (Morticia)", image: "images/img8.png", type: "portrait", position: "center top" },
+            { title: "Harry Potter", image: "images/img9.png", type: "portrait", position: "center top" },
+            { title: "Capitana Marvel", image: "images/img10.png", type: "portrait", position: "center top" },
+            { title: "Raven (Jóvenes Titanes)", image: "images/img11.png", type: "portrait", position: "center top" },
+            { title: "Zatanna (DC)", image: "images/img12.png", type: "portrait", position: "center top" },
+            { title: "Hiedra Venenosa (DC)", image: "images/img13.png", type: "portrait", position: "center top" },
+            { title: "Alicia en el País de las Maravillas", image: "images/img14.png", type: "full-body", position: "center center" },
+            { title: "Sombrerero Loco", image: "images/img15.png", type: "portrait", position: "center top" },
+            { title: "Reina Blanca", image: "images/img16.png", type: "portrait", position: "center top" },
+            { title: "Frozen (Elsa)", image: "images/img17.png", type: "full-body", position: "center center" },
+            { title: "Señor de los Anillos (Galadriel)", image: "images/img18.png", type: "portrait", position: "center top" },
+            { title: "Bella y la Bestia", image: "images/img19.png", type: "full-body", position: "center center" },
+            { title: "Chicas Superpoderosas", image: "images/img20.png", type: "portrait", position: "center top" },
+            { title: "Los Increíbles", image: "images/img21.png", type: "portrait", position: "center top" },
+            { title: "Scooby Doo", image: "images/img22.png", type: "portrait", position: "center top" },
+            { title: "Peaky Blinders", image: "images/img23.png", type: "portrait", position: "center top" },
+            { title: "Team Rocket (Pokémon)", image: "images/img24.png", type: "portrait", position: "center top" },
+            { title: "Toy Story (Jessie)", image: "images/img25.png", type: "portrait", position: "center top" },
+            { title: "Luffy (One Piece)", image: "images/img26.png", type: "portrait", position: "center top" },
+            { title: "Kim Possible", image: "images/img27.png", type: "portrait", position: "center top" },
+            { title: "Mario Bros", image: "images/img28.png", type: "portrait", position: "center top" },
+            { title: "Lara Croft", image: "images/img29.png", type: "portrait", position: "center top" },
+            { title: "Violet (Fábrica de Chocolate)", image: "images/img30.jpg", type: "portrait", position: "center top" },
+            { title: "Maga / Ilusionista", image: "images/img31.png", type: "portrait", position: "center center" },
+            { title: "Diosa Romana", image: "images/img32.png", type: "portrait", position: "center top" },
+            { title: "Cisne Negro", image: "images/img33.png", type: "portrait", position: "center top" },
+            { title: "Matrix (Trinity)", image: "images/img34.png", type: "portrait", position: "center top" },
+            { title: "La Casa de Papel", image: "images/img35.jpg", type: "portrait", position: "center top" },
         ];
 
         let currentIndex = 0;
@@ -224,14 +233,23 @@
             // Aplicar ajustes específicos según el tipo de imagen
             costumeImage.className = 'w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] object-cover object-center transition-all duration-300 hover:scale-105';
             
-            if (costume.type === 'portrait') {
+            // Usar posición personalizada si está definida, sino usar la lógica por tipo
+            if (costume.position) {
+                costumeImage.style.objectPosition = costume.position;
+            } else if (costume.type === 'portrait') {
                 costumeImage.style.objectPosition = 'center top';
-                costumeImage.style.filter = 'brightness(0.95) contrast(1.1) saturate(1.1)';
             } else if (costume.type === 'full-body') {
                 costumeImage.style.objectPosition = 'center center';
-                costumeImage.style.filter = 'brightness(0.9) contrast(1.15) saturate(1.05)';
             } else {
                 costumeImage.style.objectPosition = 'center center';
+            }
+            
+            // Aplicar filtros según el tipo
+            if (costume.type === 'portrait') {
+                costumeImage.style.filter = 'brightness(0.95) contrast(1.1) saturate(1.1)';
+            } else if (costume.type === 'full-body') {
+                costumeImage.style.filter = 'brightness(0.9) contrast(1.15) saturate(1.05)';
+            } else {
                 costumeImage.style.filter = 'brightness(0.95) contrast(1.1) saturate(1.1)';
             }
             
