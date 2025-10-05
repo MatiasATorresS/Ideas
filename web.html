@@ -63,9 +63,25 @@
             filter: brightness(0.95) contrast(1.1) saturate(1.1);
             object-fit: cover;
             object-position: center top;
+            /* Optimizaciones para carga rápida */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            will-change: transform;
         }
         #costume-image:hover {
             filter: brightness(1.05) contrast(1.15) saturate(1.2);
+        }
+        
+        /* Loading state */
+        .loading {
+            background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
         
         /* Ajustes específicos para diferentes tipos de imágenes */
@@ -148,6 +164,8 @@
         ];
 
         let currentIndex = 0;
+        let imageCache = new Map();
+        let preloadQueue = [];
 
         const costumeCard = document.getElementById('costume-card');
         const costumeImage = document.getElementById('costume-image');
@@ -156,11 +174,52 @@
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
 
+        // Función para precargar imágenes
+        function preloadImage(src) {
+            return new Promise((resolve, reject) => {
+                if (imageCache.has(src)) {
+                    resolve(imageCache.get(src));
+                    return;
+                }
+                
+                const img = new Image();
+                img.onload = () => {
+                    imageCache.set(src, img);
+                    resolve(img);
+                };
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        // Precargar las siguientes 3 imágenes
+        function preloadNextImages() {
+            const nextIndices = [
+                (currentIndex + 1) % costumes.length,
+                (currentIndex + 2) % costumes.length,
+                (currentIndex + 3) % costumes.length
+            ];
+            
+            nextIndices.forEach(index => {
+                const costume = costumes[index];
+                if (!imageCache.has(costume.image)) {
+                    preloadImage(costume.image).catch(() => {
+                        // Silently handle preload errors
+                    });
+                }
+            });
+        }
+
         function showCostume(index) {
             const costume = costumes[index];
-            costumeImage.src = costume.image;
             costumeTitle.textContent = costume.title;
             costumeCounter.textContent = `${index + 1} / ${costumes.length}`;
+            
+            // Mostrar estado de carga
+            costumeImage.classList.add('loading');
+            costumeImage.style.background = 'linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%)';
+            costumeImage.style.backgroundSize = '200% 100%';
+            costumeImage.style.animation = 'loading 1.5s infinite';
             
             // Aplicar ajustes específicos según el tipo de imagen
             costumeImage.className = 'w-full h-64 sm:h-80 md:h-96 lg:h-[28rem] object-cover object-center transition-all duration-300 hover:scale-105';
@@ -176,10 +235,26 @@
                 costumeImage.style.filter = 'brightness(0.95) contrast(1.1) saturate(1.1)';
             }
             
-            costumeCard.classList.remove('fade-in');
-            // Trigger reflow to restart animation
-            void costumeCard.offsetWidth;
-            costumeCard.classList.add('fade-in');
+            // Cargar imagen con caché
+            preloadImage(costume.image).then(() => {
+                costumeImage.src = costume.image;
+                costumeImage.classList.remove('loading');
+                costumeImage.style.background = '';
+                costumeImage.style.animation = '';
+                
+                // Precargar siguientes imágenes
+                optimizePreload();
+                
+                costumeCard.classList.remove('fade-in');
+                void costumeCard.offsetWidth;
+                costumeCard.classList.add('fade-in');
+            }).catch(() => {
+                // Si falla la carga, usar placeholder
+                costumeImage.src = 'https://placehold.co/600x400/2d3748/e2e8f0?text=Imagen+no+disponible';
+                costumeImage.classList.remove('loading');
+                costumeImage.style.background = '';
+                costumeImage.style.animation = '';
+            });
         }
 
         prevBtn.addEventListener('click', () => {
@@ -192,9 +267,37 @@
             showCostume(currentIndex);
         });
 
+        // Detectar conexión lenta
+        function isSlowConnection() {
+            return navigator.connection && (
+                navigator.connection.effectiveType === 'slow-2g' ||
+                navigator.connection.effectiveType === '2g' ||
+                navigator.connection.saveData === true
+            );
+        }
+
+        // Optimizar precarga según conexión
+        function optimizePreload() {
+            if (isSlowConnection()) {
+                // En conexiones lentas, precargar solo 1 imagen
+                const nextIndex = (currentIndex + 1) % costumes.length;
+                const costume = costumes[nextIndex];
+                if (!imageCache.has(costume.image)) {
+                    preloadImage(costume.image).catch(() => {});
+                }
+            } else {
+                // En conexiones rápidas, precargar 3 imágenes
+                preloadNextImages();
+            }
+        }
+
         // Carga inicial
         window.addEventListener('load', () => {
             showCostume(currentIndex);
+            // Precargar imágenes iniciales después de un breve delay
+            setTimeout(() => {
+                optimizePreload();
+            }, 1000);
         });
     </script>
 </body>
