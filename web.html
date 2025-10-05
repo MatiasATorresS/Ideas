@@ -103,6 +103,65 @@
         .position-right-center { object-position: right center; }
         .position-left-top { object-position: left top; }
         .position-right-top { object-position: right top; }
+        
+        /* Estilos para el modal */
+        #image-modal {
+            backdrop-filter: blur(8px);
+            animation: fadeInModal 0.4s ease-out;
+        }
+        
+        #image-modal.hidden {
+            animation: fadeOutModal 0.3s ease-out;
+        }
+        
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOutModal {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        #modal-image {
+            animation: zoomIn 0.4s ease-out;
+            /* Asegurar que la imagen mantenga su proporción natural */
+            width: auto;
+            height: auto;
+            max-width: 95vw;
+            max-height: 95vh;
+            /* Mejorar la calidad de la imagen */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        
+        @keyframes zoomIn {
+            from { 
+                transform: scale(0.7); 
+                opacity: 0; 
+            }
+            to { 
+                transform: scale(1); 
+                opacity: 1; 
+            }
+        }
+        
+        /* Cursor pointer para indicar que es clickeable */
+        #costume-image {
+            cursor: pointer;
+        }
+        
+        /* Mejorar el botón de cerrar */
+        #close-modal {
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        #close-modal:hover {
+            background-color: rgba(147, 51, 234, 0.3);
+            border-color: rgba(147, 51, 234, 0.5);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
@@ -130,6 +189,25 @@
             <button id="next-btn" class="nav-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 sm:py-3 sm:px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base">
                 Siguiente
             </button>
+        </div>
+    </div>
+
+    <!-- Modal para imagen completa -->
+    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-95 z-50 hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="relative w-full h-full flex items-center justify-center">
+            <!-- Botón cerrar -->
+            <button id="close-modal" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white text-3xl sm:text-4xl font-bold hover:text-purple-400 transition-colors z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                ×
+            </button>
+            <!-- Contenedor de la imagen -->
+            <div class="relative max-w-[95vw] max-h-[95vh] flex items-center justify-center">
+                <!-- Imagen completa -->
+                <img id="modal-image" src="" alt="Imagen completa" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+                <!-- Título del disfraz -->
+                <div class="absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-black via-black/80 to-transparent rounded-b-lg">
+                    <h3 id="modal-title" class="text-white text-lg sm:text-xl font-bold text-center drop-shadow-lg"></h3>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -182,6 +260,12 @@
         const costumeCounter = document.getElementById('costume-counter');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
+        
+        // Elementos del modal
+        const imageModal = document.getElementById('image-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalTitle = document.getElementById('modal-title');
+        const closeModal = document.getElementById('close-modal');
 
         // Función para precargar imágenes
         function preloadImage(src) {
@@ -217,6 +301,37 @@
                     });
                 }
             });
+        }
+
+        // Función para abrir el modal
+        function openModal() {
+            const costume = costumes[currentIndex];
+            
+            // Limpiar imagen anterior
+            modalImage.src = '';
+            modalImage.style.opacity = '0';
+            
+            // Cargar nueva imagen
+            const img = new Image();
+            img.onload = () => {
+                modalImage.src = costume.image;
+                modalImage.style.opacity = '1';
+            };
+            img.onerror = () => {
+                modalImage.src = 'https://placehold.co/800x600/2d3748/e2e8f0?text=Imagen+no+disponible';
+                modalImage.style.opacity = '1';
+            };
+            img.src = costume.image;
+            
+            modalTitle.textContent = costume.title;
+            imageModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+        }
+
+        // Función para cerrar el modal
+        function closeModalFunc() {
+            imageModal.classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Restaurar scroll del body
         }
 
         function showCostume(index) {
@@ -283,6 +398,24 @@
         nextBtn.addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % costumes.length;
             showCostume(currentIndex);
+        });
+
+        // Event listeners para el modal
+        costumeImage.addEventListener('click', openModal);
+        closeModal.addEventListener('click', closeModalFunc);
+        
+        // Cerrar modal al hacer clic fuera de la imagen
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                closeModalFunc();
+            }
+        });
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !imageModal.classList.contains('hidden')) {
+                closeModalFunc();
+            }
         });
 
         // Detectar conexión lenta
